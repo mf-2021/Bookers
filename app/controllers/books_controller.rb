@@ -8,9 +8,13 @@ class BooksController < ApplicationController
 
   # 本の感想の投稿内容の保存
   def create
-    book = Book.new(book_params)
-    book.save
-    redirect_to book_path(book.id), notice:"Book was successfully created."
+    @book = Book.new(book_params)
+    if @book.save
+      redirect_to book_path(@book.id), notice:"Book was successfully created."
+    else
+      @books = Book.all
+      render action: :index
+    end
   end
 
   # 詳細ページ
@@ -25,9 +29,13 @@ class BooksController < ApplicationController
 
   # 更新
   def update
-    book = Book.find(params[:id])
-    book.update(book_params)
-    redirect_to book_path(book.id), notice:"Book was successfully updated."
+    @book = Book.find(params[:id])
+    if @book.update(book_params)
+      redirect_to book_path(@book.id), notice:"Book was successfully updated."
+    else
+      @books = Book.all
+      render action: :edit
+    end
   end
 
   # 削除
